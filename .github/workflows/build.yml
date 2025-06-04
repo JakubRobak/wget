@@ -7,45 +7,46 @@ on:
 
 jobs:
   build:
-    name: Build and Upload Wget
     runs-on: ubuntu-latest
+    container:
+      image: debian:bookworm
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install build dependencies
+      - name: Install dependencies
         run: |
-          sudo apt update
-          sudo apt install -y \
+          apt-get update
+          apt-get install -y \
+            git \
             build-essential \
             autoconf \
             automake \
             autopoint \
+            gettext \
             texinfo \
             flex \
             gperf \
-            gettext \
             libssl-dev \
             libgnutls28-dev \
             zlib1g-dev \
             pkg-config \
-            git \
             wget \
-            autoconf-archive \
             ca-certificates \
-            checkinstall
+            autoconf-archive \
+            bison
 
-      - name: Run bootstrap script
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run bootstrap
         run: ./bootstrap
 
-      - name: Configure the build
+      - name: Configure
         run: ./configure --with-ssl=openssl
 
-      - name: Build wget
+      - name: Build
         run: make -j$(nproc)
 
-      - name: Upload built binary
+      - name: Upload wget binary
         uses: actions/upload-artifact@v4
         with:
           name: wget-binary
