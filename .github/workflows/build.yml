@@ -14,26 +14,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-- name: Install build dependencies
-  run: |
-    sudo apt update
-    sudo apt install -y \
-      build-essential \
-      automake \
-      autoconf \
-      autopoint \
-      gettext \
-      texinfo \
-      gperf \
-      libssl-dev \
-      libidn2-dev \
-      libpsl-dev \
-      pkg-config \
-      libgnutls28-dev \
-      libpcre2-dev \
-      zlib1g-dev \
-      libuuid-perl
-
+      - name: Install build dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            build-essential \
+            automake \
+            autoconf \
+            autopoint \
+            gettext \
+            texinfo \
+            gperf \
+            libssl-dev \
+            libidn2-dev \
+            libpsl-dev \
+            pkg-config \
+            libgnutls28-dev \
+            libpcre2-dev \
+            zlib1g-dev \
+            libuuid-perl \
+            bison \
+            flex
 
       - name: Run bootstrap script
         run: ./bootstrap
