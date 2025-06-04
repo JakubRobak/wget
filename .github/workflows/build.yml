@@ -8,33 +8,43 @@ on:
 jobs:
   build:
     name: Build and Upload Wget
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install build dependencies
+      - name: Mark working directory as safe for Git
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+
+      - name: Install dependencies
         run: |
           sudo apt update
           sudo apt install -y \
             build-essential \
-            autoconf \
             automake \
-            autopoint \
+            autoconf \
             gettext \
             texinfo \
             flex \
+            bison \
             gperf \
             libssl-dev \
             libgnutls28-dev \
             zlib1g-dev \
             pkg-config \
             git \
-            wget \
-            autoconf-archive \
             ca-certificates \
-            bison
+            autoconf-archive \
+            wget
+
+          # Ręczna instalacja autopoint z gettext
+          curl -O http://ftp.gnu.org/pub/gnu/gettext/gettext-0.21.tar.gz
+          tar -xzf gettext-0.21.tar.gz
+          cd gettext-0.21/gettext-tools
+          ./configure && make -j$(nproc)
+          sudo make install
+          cd ../../
 
       - name: Run bootstrap script
         run: ./bootstrap
