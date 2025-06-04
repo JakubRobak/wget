@@ -1,0 +1,48 @@
+name: Build Wget
+
+on:
+  push:
+    branches:
+      - ino_dev
+
+jobs:
+  build:
+    name: Build and Upload Wget
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            build-essential \
+            automake \
+            autoconf \
+            gettext \
+            texinfo \
+            libssl-dev \
+            libidn2-0-dev \
+            libpsl-dev \
+            pkg-config \
+            libgnutls28-dev \
+            libpcre2-dev \
+            zlib1g-dev \
+            libuuid-perl
+
+      - name: Run bootstrap script
+        run: ./bootstrap
+
+      - name: Configure the build
+        run: ./configure --with-ssl=openssl
+
+      - name: Build wget
+        run: make -j$(nproc)
+
+      - name: Upload built binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: wget-binary
+          path: src/wget
