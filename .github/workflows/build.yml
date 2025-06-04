@@ -24,6 +24,7 @@ jobs:
             build-essential \
             automake \
             autoconf \
+            autopoint \
             gettext \
             texinfo \
             flex \
@@ -37,14 +38,6 @@ jobs:
             ca-certificates \
             autoconf-archive \
             wget
-
-          # Ręczna instalacja autopoint z gettext
-          curl -O http://ftp.gnu.org/pub/gnu/gettext/gettext-0.21.tar.gz
-          tar -xzf gettext-0.21.tar.gz
-          cd gettext-0.21/gettext-tools
-          ./configure && make -j$(nproc)
-          sudo make install
-          cd ../../
 
       - name: Run bootstrap script
         run: ./bootstrap
